@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+
+    <!-- 自动扫描包路径下的Spring注解注入为bean -->
+    <context:component-scan base-package="com.congzhou.util" />
+    <context:component-scan base-package="com.congzhou.controller" />
+
+    <!--SpringMVC配置-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!--使用fastJson转换返回的Json数据，否则报错：No converter found for return value of type: class com.congzhou.component.res.Result -->
+            <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--bean IoC声明-->
+    <bean id="userDao" class="com.congzhou.dao.impl.UserDaoImpl"></bean>
+    <bean id="userService" class="com.congzhou.service.impl.UserServiceImpl">
+<!--        <constructor-arg ref="userDao"/>-->
+        <property ref="userDao" name="userDao"></property>
+    </bean>
+
+    <bean id="roleService" class="com.congzhou.service.impl.RoleServiceImpl"></bean>
+
+    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath*:application.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+    </bean>
+
+    <bean id="serviceSayHandler" class="com.congzhou.aop.ServiceSayHandler"/>
+
+    <!--aop配置-->
+    <aop:config>
+        <aop:aspect ref="serviceSayHandler">
+            <aop:pointcut id="serviceSayMethod" expression="execution(* com.congzhou.service.*.say())" />
+            <aop:before method="beforeSay" pointcut-ref="serviceSayMethod" />
+            <aop:after method="afterSay" pointcut-ref="serviceSayMethod" />
+        </aop:aspect>
+    </aop:config>
+</beans>
