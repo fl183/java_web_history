@@ -1,0 +1,6 @@
+/.idea
+/out
+/web/WEB_INF/class
+/web/WEB_INF/lib
+/target
+/servlet_maven_demo.iml
