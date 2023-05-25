@@ -2,9 +2,9 @@
 
 $$
 \begin{vmatrix}
-1 & 2 & 3\
-4 & 5 & 6\
-7 & 8 & 9\
+1 & 2 & 3 \
+4 & 5 & 6 \
+7 & 8 & 9 \
 \end{vmatrix}
 $$
 
@@ -13,9 +13,7 @@ $$
 $$
 \begin{vmatrix}
 1 & 2 & 3 \
-
 4 & 5 & 6 \
-
 7 & 8 & 9 \
 \end{vmatrix}
 =1\times\begin{vmatrix}5&6\8&9\end{vmatrix}-2\times\begin{vmatrix}4&6\7&9\end{vmatrix}+3\times\begin{vmatrix}4&5\7&8\end{vmatrix}
